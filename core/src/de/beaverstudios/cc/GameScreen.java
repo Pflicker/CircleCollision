@@ -7,9 +7,12 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+
+import de.beaverstudios.cc.Box2D.B2dModel;
 
 class GameScreen implements Screen {
 
@@ -22,6 +25,10 @@ class GameScreen implements Screen {
 
     public InputMultiplexer inputMultiplexer;
     public InputController ip;
+
+    public OrthographicCamera cam;
+    public B2dModel model;
+    public Box2DDebugRenderer debugRenderer;
 
     public GameScreen(CC cc) {
         this.game = cc;
@@ -39,6 +46,11 @@ class GameScreen implements Screen {
 
 
         Gdx.input.setInputProcessor(inputMultiplexer);
+
+        model = new B2dModel();
+        cam = new OrthographicCamera(32,24);
+        debugRenderer = new Box2DDebugRenderer(true,true,true,true,true,true);
+
 
 
 
