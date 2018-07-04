@@ -65,8 +65,12 @@ class GameScreen implements Screen {
     public void render(float dt) {
         update(dt);
 
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        model.logicStep(dt);
         Gdx.gl.glClearColor(1, 1, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        debugRenderer.render(model.world, cam.combined);
 
         /*shapeRenderer.begin();
         shapeRenderer.box(10,10,0,100,100,100);
