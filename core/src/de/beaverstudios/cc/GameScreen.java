@@ -7,10 +7,13 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Array;
+
+import de.beaverstudios.cc.Box2D.B2dModel;
 
 class GameScreen implements Screen {
 
@@ -26,6 +29,10 @@ class GameScreen implements Screen {
 
     public static Array<Integer> dirLeft;
     public static Array<Integer> dirRight;
+
+    public OrthographicCamera cam;
+    public B2dModel model;
+    public Box2DDebugRenderer debugRenderer;
 
     public GameScreen(CC cc) {
         this.game = cc;
@@ -52,7 +59,16 @@ class GameScreen implements Screen {
         inputMultiplexer.addProcessor(ui);
         inputMultiplexer.addProcessor(ip);
 
+
         Gdx.input.setInputProcessor(inputMultiplexer);
+
+        model = new B2dModel();
+        cam = new OrthographicCamera(32,24);
+        debugRenderer = new Box2DDebugRenderer(true,true,true,true,true,true);
+
+
+
+
     }
 
     @Override
@@ -64,8 +80,12 @@ class GameScreen implements Screen {
     public void render(float dt) {
         update(dt);
 
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        model.logicStep(dt);
         Gdx.gl.glClearColor(1, 1, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        debugRenderer.render(model.world, cam.combined);
 
         /*shapeRenderer.begin();
         shapeRenderer.box(10,10,0,100,100,100);
