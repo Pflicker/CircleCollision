@@ -1,9 +1,18 @@
 package de.beaverstudios.cc;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
 
 public class InputController implements InputProcessor {
+
+    private GameScreen gameScreen;
+
+    public InputController(GameScreen gameScreen) {
+        this.gameScreen = gameScreen;
+    }
+
     @Override
     public boolean keyDown(int keycode) {
         return false;
@@ -23,9 +32,14 @@ public class InputController implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (Gdx.input.isTouched()) {
             if (Gdx.input.getX() > Gdx.graphics.getWidth() / 2){
-                //touched right
+
+                gameScreen.moveRight();
+                UI.moveRight.makeMove();
+                System.out.println("Right");
             } else {
-                //touchde left
+                gameScreen.moveLeft();
+                UI.moveLeft.makeMove();
+                System.out.println("Left");
             }
         }
         return false;

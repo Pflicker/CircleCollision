@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.utils.Array;
 
 class GameScreen implements Screen {
 
@@ -23,25 +24,35 @@ class GameScreen implements Screen {
     public InputMultiplexer inputMultiplexer;
     public InputController ip;
 
+    public static Array<Integer> dirLeft;
+    public static Array<Integer> dirRight;
+
     public GameScreen(CC cc) {
         this.game = cc;
         this.batch = cc.gameBatch;
 
-        ui = new UI(game,batch);
-
         shapeRenderer = new ShapeRenderer();
 
-        ip = new InputController();
+        dirLeft = new Array<Integer>(3);
+        dirRight = new Array<Integer>(3);
+
+        for (int i = 0; i < 3; i++){
+            createDirLeft();
+        }
+
+        for (int i = 0; i < 3; i++){
+            createDirRight();
+        }
+
+        ui = new UI(game,batch);
+
+        ip = new InputController(this);
 
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(ui);
         inputMultiplexer.addProcessor(ip);
 
-
         Gdx.input.setInputProcessor(inputMultiplexer);
-
-
-
     }
 
     @Override
@@ -93,5 +104,27 @@ class GameScreen implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    public void moveLeft() {
+        dirLeft.removeIndex(0);
+        System.out.println("Test");
+        createDirLeft();
+    }
+
+    public void moveRight() {
+        dirRight.removeIndex(0);
+        createDirRight();
+    }
+
+    public void createDirLeft(){
+        int r = (int) (Math.random() * 180 + 180);
+        dirLeft.add(r);
+        System.out.println(dirLeft);
+    }
+
+    public void createDirRight(){
+        int r = (int) (Math.random() * 180);
+        dirRight.add(r);
     }
 }
