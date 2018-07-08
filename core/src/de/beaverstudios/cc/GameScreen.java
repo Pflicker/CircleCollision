@@ -2,7 +2,9 @@ package de.beaverstudios.cc;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -58,6 +60,8 @@ public class GameScreen implements Screen {
 
     public float x,y;
     public float r;
+
+    public static Universe universe;
 
     public GameScreen(CC cc) {
         this.game = cc;
@@ -116,6 +120,8 @@ public class GameScreen implements Screen {
         poly.setOrigin(10,20);
 
 
+        //Create Wolrd
+        universe = new Universe(model.b2dWorld);
 
 
     }
@@ -132,7 +138,7 @@ public class GameScreen implements Screen {
         model.logicStep(dt);
         Gdx.gl.glClearColor(1, 1, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        debugRenderer.render(model.world, cam.combined);
+        debugRenderer.render(model.b2dWorld, cam.combined);
 
         batch.begin();
         batch.draw(background,0,0);
@@ -195,24 +201,51 @@ public class GameScreen implements Screen {
 
     public void moveLeft() {
         changeRotation(dirLeft.get(0));
+        universe.player.ApplyMove(dirLeft.get(0));
+        System.out.println("deg" + dirLeft.get(0));
         dirLeft.removeIndex(0);
         createDirLeft();
     }
 
     public void moveRight() {
+        universe.player.ApplyMove(dirRight.get(0));
+        System.out.println("deg" + dirRight.get(0));
         changeRotation(dirRight.get(0));
         dirRight.removeIndex(0);
         createDirRight();
     }
 
     public void createDirLeft(){
-        int r = (int) (Math.random() * 180 + 180);
-        dirLeft.add(r);
+        int rnd;
+
+        if (dirLeft.size == 0){
+            rnd = (int) (Math.random() * 180 + 180);
+            dirLeft.add(rnd);
+            return;
+        }
+
+        do{
+            rnd = (int) (Math.random() * 180 + 180);
+        }while(Math.abs(rnd-dirLeft.peek()) < 30);
+
+        dirLeft.add(rnd);
         System.out.println(dirLeft);
     }
 
     public void createDirRight(){
-        int r = (int) (Math.random() * 180);
-        dirRight.add(r);
+        int rnd;
+
+        if (dirRight.size == 0){
+            rnd = (int) (Math.random() * 180);
+            dirRight.add(rnd);
+            return;
+        }
+
+        do{
+            rnd = (int) (Math.random() * 180);
+            System.out.println(rnd + " " + dirRight.peek());
+        } while(Math.abs(rnd-dirRight.peek()) < 30);
+
+        dirRight.add(rnd);
     }
 }
