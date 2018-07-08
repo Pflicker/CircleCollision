@@ -12,7 +12,7 @@ public class Player {
     public int y;
     public float vel;
     World b2dWorld;
-    private Body b2dPlayer;
+    public Body b2dPlayer;
 
     public Player(int x, int y, World b2dWorld) {
         this.x = x;

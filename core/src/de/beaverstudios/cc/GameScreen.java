@@ -82,19 +82,17 @@ public class GameScreen implements Screen {
         cam = new OrthographicCamera(32,24);
         debugRenderer = new Box2DDebugRenderer(true,true,true,true,true,true);
 
+        //Create Wolrd
+        universe = new Universe(model.b2dWorld);
+
         score = 0;
         time = 0;
-
-        x = Gdx.graphics.getWidth()/2;
-        y = Gdx.graphics.getHeight()/2;
-        r = 0;
 
         background = new Texture(Gdx.files.internal("background.jpg"));
 
         player = new Texture(Gdx.files.internal("player2.png"));
         spPlayer = new Sprite(player);
         spPlayer.scale(0.01f);
-        spPlayer.setPosition(300,300);
 
         asteroid = new Texture(Gdx.files.internal("asteroiden.png"));
         PolygonRegion region = new PolygonRegion(new TextureRegion(asteroid),
@@ -111,8 +109,6 @@ public class GameScreen implements Screen {
         poly.setOrigin(10,20);
 
 
-        //Create Wolrd
-        universe = new Universe(model.b2dWorld);
 
 
     }
@@ -126,18 +122,17 @@ public class GameScreen implements Screen {
     public void render(float dt) {
         update(dt);
 
-        model.logicStep(dt);
         Gdx.gl.glClearColor(1, 1, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        debugRenderer.render(model.b2dWorld, cam.combined);
 
         batch.begin();
         batch.draw(background,0,0);
-        batch.draw(player,x,y,50,50,100,100,1,1,r,1,1,player.getWidth(),player.getHeight(),false,false);
+        debugRenderer.render(model.b2dWorld, cam.combined);
+        batch.draw(player,universe.player.b2dPlayer.getPosition().x,universe.player.b2dPlayer.getPosition().y,50,50,100,100,1,1,r,1,1,player.getWidth(),player.getHeight(),false,false);
         batch.end();
 
         polyBatch.begin();
-        poly.draw(polyBatch);
+        //poly.draw(polyBatch);
         polyBatch.end();
 
         ui.draw();
@@ -150,13 +145,9 @@ public class GameScreen implements Screen {
             time += dt;
             score += dt;
 
+            model.logicStep(dt);
 
-            float dx = (float) Math.cos(r) * 50;
-            float dy = (float) Math.sin(r) * 50;
-
-            x += dx * dt;
-            y += dy * dt;
-
+            System.out.println(universe.player.b2dPlayer.getPosition().x + " = x");
         }
         ui.act();
 
@@ -193,14 +184,12 @@ public class GameScreen implements Screen {
     public void moveLeft() {
         changeRotation(dirLeft.get(0));
         universe.player.ApplyMove(dirLeft.get(0));
-        System.out.println("deg" + dirLeft.get(0));
         dirLeft.removeIndex(0);
         createDirLeft();
     }
 
     public void moveRight() {
         universe.player.ApplyMove(dirRight.get(0));
-        System.out.println("deg" + dirRight.get(0));
         changeRotation(dirRight.get(0));
         dirRight.removeIndex(0);
         createDirRight();
@@ -220,7 +209,6 @@ public class GameScreen implements Screen {
         }while(Math.abs(rnd-dirLeft.peek()) < 30);
 
         dirLeft.add(rnd);
-        System.out.println(dirLeft);
     }
 
     public void createDirRight(){
@@ -234,7 +222,6 @@ public class GameScreen implements Screen {
 
         do{
             rnd = (int) (Math.random() * 180);
-            System.out.println(rnd + " " + dirRight.peek());
         } while(Math.abs(rnd-dirRight.peek()) < 30);
 
         dirRight.add(rnd);
