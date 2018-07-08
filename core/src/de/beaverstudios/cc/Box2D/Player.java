@@ -11,6 +11,7 @@ public class Player {
     public int x;
     public int y;
     public float vel;
+    public float rotation;
     World b2dWorld;
     public Body b2dPlayer;
 
@@ -19,6 +20,7 @@ public class Player {
         this.y = y;
         this.b2dWorld = b2dWorld;
         this.vel = 2f;
+        rotation = 0;
 
         //Create b2d object
         createPlayer();
@@ -65,7 +67,10 @@ public class Player {
         vX = (float) (vel*Math.sin(deg*deg2rad));
         vY = (float) (vel*Math.cos(deg*deg2rad));
 
-        b2dPlayer.setTransform(b2dPlayer.getPosition(), (float) (90-deg)*deg2rad);
+        rotation = (float) (90-deg);
+        System.out.println("R: " + rotation);
+
+        b2dPlayer.setTransform(b2dPlayer.getPosition(), rotation*deg2rad);
         b2dPlayer.setAngularVelocity(0);
         //System.out.println("body angle: " + b2dPlayer.getAngle()*180f/Math.PI);
         //System.out.println("vel " + vX + " " + vY + " " + " deg " + deg);

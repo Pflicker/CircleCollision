@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Array;
 
@@ -49,8 +50,6 @@ public class GameScreen implements Screen {
     public PolygonSprite poly;
     public Texture background;
 
-    public float x,y;
-    public float r;
 
     public static Universe universe;
 
@@ -125,10 +124,12 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(1, 1, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        Vector2 playerPos = worldToScreen(universe.player.b2dPlayer.getPosition().x,universe.player.b2dPlayer.getPosition().y);
+
         batch.begin();
         batch.draw(background,0,0);
-        debugRenderer.render(model.b2dWorld, cam.combined);
-        batch.draw(player,universe.player.b2dPlayer.getPosition().x,universe.player.b2dPlayer.getPosition().y,50,50,100,100,1,1,r,1,1,player.getWidth(),player.getHeight(),false,false);
+        batch.draw(player,playerPos.x,playerPos.y,50,50,100,100,1,1,universe.player.rotation,1,1,player.getWidth(),player.getHeight(),false,false);
+        //debugRenderer.render(model.b2dWorld, cam.combined);
         batch.end();
 
         polyBatch.begin();
@@ -146,8 +147,6 @@ public class GameScreen implements Screen {
             score += dt;
 
             model.logicStep(dt);
-
-            System.out.println(universe.player.b2dPlayer.getPosition().x + " = x");
         }
         ui.act();
 
@@ -156,6 +155,21 @@ public class GameScreen implements Screen {
     @Override
     public void resize(int width, int height) {
 
+    }
+
+    public Vector2 worldToScreen(float x, float y){
+        Vector2 screenCoord = new Vector2();
+
+//        1280 * 720
+        int meterToPixel = 50; //50 pixels to a meter
+        int offsetX = 640; //x offset in Pixels centerX
+        int offsetY = 360; //y offset in Pixels centerY
+        int screenX = (int)(x*meterToPixel + offsetX);
+        int screenY = (int)(y*meterToPixel + offsetY) ;
+
+        screenCoord.x = screenX;
+        screenCoord.y = screenY;
+        return screenCoord;
     }
 
     @Override
@@ -177,12 +191,8 @@ public class GameScreen implements Screen {
     public void dispose() {
 
     }
-    public void changeRotation(int ir){
-        this.r = ir;
-    }
 
     public void moveLeft() {
-        changeRotation(dirLeft.get(0));
         universe.player.ApplyMove(dirLeft.get(0));
         dirLeft.removeIndex(0);
         createDirLeft();
@@ -190,7 +200,6 @@ public class GameScreen implements Screen {
 
     public void moveRight() {
         universe.player.ApplyMove(dirRight.get(0));
-        changeRotation(dirRight.get(0));
         dirRight.removeIndex(0);
         createDirRight();
     }
