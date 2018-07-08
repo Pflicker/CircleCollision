@@ -1,9 +1,9 @@
 package de.beaverstudios.cc;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
+
+import de.beaverstudios.cc.ui.UI;
 
 public class InputController implements InputProcessor {
 

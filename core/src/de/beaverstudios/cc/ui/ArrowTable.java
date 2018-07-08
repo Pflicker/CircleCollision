@@ -1,13 +1,11 @@
-package de.beaverstudios.cc;
+package de.beaverstudios.cc.ui;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.utils.Array;
+
+import de.beaverstudios.cc.CC;
+import de.beaverstudios.cc.ui.UiArrow;
 
 public class ArrowTable extends WidgetGroup {
 

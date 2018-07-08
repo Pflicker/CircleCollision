@@ -1,6 +1,5 @@
-package de.beaverstudios.cc;
+package de.beaverstudios.cc.ui;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
