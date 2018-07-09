@@ -129,7 +129,7 @@ public class GameScreen implements Screen {
         batch.begin();
         batch.draw(background,0,0);
         batch.draw(player,playerPos.x,playerPos.y,50,50,100,100,1,1,universe.player.rotation,1,1,player.getWidth(),player.getHeight(),false,false);
-        //debugRenderer.render(model.b2dWorld, cam.combined);
+        debugRenderer.render(model.b2dWorld, cam.combined);
         batch.end();
 
         polyBatch.begin();
@@ -145,7 +145,7 @@ public class GameScreen implements Screen {
         if(play) {
             time += dt;
             score += dt;
-
+            universe.CreateAsteroid();
             model.logicStep(dt);
         }
         ui.act();

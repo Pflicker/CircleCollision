@@ -42,6 +42,7 @@ public class Asteroid {
         CircleShape circleShape = new CircleShape();
         circleShape.setRadius(radius /2);
         boxBody.createFixture(makeFixture(material,circleShape));
+        boxBody.setLinearVelocity(-2f,0f);
         circleShape.dispose();
         return boxBody;
     }

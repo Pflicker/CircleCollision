@@ -19,19 +19,6 @@ public class B2dModel {
 
     public B2dModel(){
         b2dWorld = new World(new Vector2(0,0f), true);
-
-        // get our body factory singleton and store it in bodyFactory
-        Asteroid asteroid = Asteroid.getInstance(b2dWorld);
-
-        // add a new rubber ball at position 1, 1
-        asteroid.makeAsteroid(1, 1, 2, Asteroid.RUBBER, BodyDef.BodyType.DynamicBody,false);
-
-        // add a new steel ball at position 4, 1
-        asteroid.makeAsteroid(4, 1, 2, Asteroid.STEEL, BodyDef.BodyType.DynamicBody,false);
-
-        // add a new stone at position -4,1
-        asteroid.makeAsteroid(-4, 1, 2, Asteroid.STONE, BodyDef.BodyType.DynamicBody,false);
-
     }
 
 

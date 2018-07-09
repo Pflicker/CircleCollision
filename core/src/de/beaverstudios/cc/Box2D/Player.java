@@ -1,5 +1,6 @@
 package de.beaverstudios.cc.Box2D;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -19,7 +20,7 @@ public class Player {
         this.x = x;
         this.y = y;
         this.b2dWorld = b2dWorld;
-        this.vel = 2f;
+        this.vel = 10f;
         rotation = 0;
 
         //Create b2d object
@@ -39,7 +40,7 @@ public class Player {
 
         // set the shape (here we use a box 50 meters wide, 1 meter tall )
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(3,1);
+        shape.setAsBox(2,1);
 
         // set the properties of the object ( shape, weight, restitution(bouncyness)
         FixtureDef fixtureDef = new FixtureDef();
@@ -59,15 +60,19 @@ public class Player {
         float vY;
         float b2dDeg;
         float deg2rad;
-
+        Vector2 direction = new Vector2(0,0);
         deg2rad = (float) (Math.PI/180f);
 
         //b2dDeg  = (float) (deg)
 
-        vX = (float) (vel*Math.sin(deg*deg2rad));
-        vY = (float) (vel*Math.cos(deg*deg2rad));
+        vX = (float) (Math.sin(deg*deg2rad));
+        vY = (float) (Math.cos(deg*deg2rad));
 
         rotation = (float) (90-deg);
+
+        direction.x = -vel * (float) (Math.sin(rotation*deg2rad));
+        direction.y = -vel * (float) (Math.cos(rotation*deg2rad));
+
         System.out.println("R: " + rotation);
 
         b2dPlayer.setTransform(b2dPlayer.getPosition(), rotation*deg2rad);
@@ -75,6 +80,7 @@ public class Player {
         //System.out.println("body angle: " + b2dPlayer.getAngle()*180f/Math.PI);
         //System.out.println("vel " + vX + " " + vY + " " + " deg " + deg);
         b2dPlayer.setLinearVelocity(vX,vY);
+        //b2dPlayer.applyLinearImpulse(direction,b2dPlayer.getPosition(),true);
     }
 
 }
