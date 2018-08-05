@@ -11,21 +11,33 @@ import de.beaverstudios.cc.ui.UI;
 public class InputController implements InputProcessor {
 
     private GameScreen gameScreen;
+    public float tL;
+    public float tR;
+    public float dtNext;
+    public float time;
 
     public InputController(GameScreen gameScreen) {
+
         this.gameScreen = gameScreen;
+        this.tL         = 0.0f;
+        this.tR         = 0.0f;
+        this.dtNext     = 1.0f;
     }
 
     @Override
     public boolean keyDown(int keycode) {
 
+        time = gameScreen.time;
+        System.out.println("time " + time + " tR " + tR + " dt " + dtNext);
         if (Gdx.input.isKeyJustPressed(keycode)) {
             System.out.println(keycode);
-            if (keycode == Input.Keys.D) {
+            if (keycode == Input.Keys.D && time-tR > dtNext) {
+                tR = time;
                 gameScreen.moveRight();
                 UI.moveRight.makeMove();
                 System.out.println("Right");
-            } else if (keycode == Input.Keys.A){
+            } else if (keycode == Input.Keys.A && time-tL > dtNext){
+                tL = time;
                 gameScreen.moveLeft();
                 UI.moveLeft.makeMove();
                 System.out.println("Left");
@@ -47,13 +59,16 @@ public class InputController implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (Gdx.input.isTouched()) {
-            if (Gdx.input.getX() > Gdx.graphics.getWidth() / 2){
 
+        time = gameScreen.time;
+        if (Gdx.input.isTouched()) {
+            if (Gdx.input.getX() > Gdx.graphics.getWidth() / 2 && time-tR > dtNext){
+                tR = time;
                 gameScreen.moveRight();
                 UI.moveRight.makeMove();
                 System.out.println("Right");
-            } else {
+            } else if(time - tL > dtNext) {
+                tL = time;
                 gameScreen.moveLeft();
                 UI.moveLeft.makeMove();
                 System.out.println("Left");
