@@ -82,7 +82,7 @@ public class GameScreen implements Screen {
         debugRenderer = new Box2DDebugRenderer(true,true,true,true,true,true);
 
         //Create Wolrd
-        universe = new Universe(model.b2dWorld);
+        universe = Universe.getInstance(model.b2dWorld);
 
         score = 0;
         time = 0;
@@ -145,6 +145,7 @@ public class GameScreen implements Screen {
         if(play) {
             time += dt;
             score += dt;
+            universe.updateVCam();
             universe.CreateAsteroid();
             model.logicStep(dt);
         }

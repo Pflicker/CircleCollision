@@ -9,6 +9,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 
+import de.beaverstudios.cc.Universe;
+
 public class Asteroid {
 
     public static final int STEEL = 0;
@@ -31,6 +33,16 @@ public class Asteroid {
 
     public Body makeAsteroid(float posx, float posy, float radius, int material, BodyDef.BodyType bodyType, boolean fixedRotation){
         // create a definition
+
+        float vX;
+        float vY;
+        float rnd;
+
+        rnd = (float) Math.random();
+        vX = (float) -Math.sin(rnd*Math.PI);
+        vY = (float)  Math.cos(rnd*Math.PI);
+        vX -= Universe.getInstance(world).vCam;
+
         BodyDef boxBodyDef = new BodyDef();
         boxBodyDef.type = bodyType;
         boxBodyDef.position.x = posx;
@@ -42,8 +54,9 @@ public class Asteroid {
         CircleShape circleShape = new CircleShape();
         circleShape.setRadius(radius /2);
         boxBody.createFixture(makeFixture(material,circleShape));
-        boxBody.setLinearVelocity(-2f,0f);
+        boxBody.setLinearVelocity(vX,vY);
         circleShape.dispose();
+        System.out.println("Vast: " + vX +  " "+ vY);
         return boxBody;
     }
 

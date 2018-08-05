@@ -7,32 +7,41 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
+import de.beaverstudios.cc.Universe;
+
 public class Player {
 
-    public int x;
-    public int y;
+    private static Player instance;
     public float vel;
     public float rotation;
     World b2dWorld;
     public Body b2dPlayer;
+    public Universe universe;
 
-    public Player(int x, int y, World b2dWorld) {
-        this.x = x;
-        this.y = y;
+    public Player(World b2dWorld) {
         this.b2dWorld = b2dWorld;
-        this.vel = 10f;
+        this.vel = 3.f;
         rotation = 0;
+        this.universe = Universe.getInstance(b2dWorld);
 
         //Create b2d object
         createPlayer();
     }
+
+    public static Player getInstance(World world){
+        if(Player.instance == null){
+            Player.instance = new Player(world);
+        }
+        return Player.instance;
+    }
+
 
     private void createPlayer(){
 
         //create a new body definition (type and location)
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(x,y);
+        bodyDef.position.set(1.f,1.f);
 
         System.out.println("create Player");
         // add it to the world
@@ -65,20 +74,20 @@ public class Player {
 
         //b2dDeg  = (float) (deg)
 
-        vX = (float) (Math.sin(deg*deg2rad));
-        vY = (float) (Math.cos(deg*deg2rad));
+        vX = (float) (vel*Math.sin(deg*deg2rad)) - universe.vCam;
+        vY = (float) (vel*Math.cos(deg*deg2rad));
 
         rotation = (float) (90-deg);
 
-        direction.x = -vel * (float) (Math.sin(rotation*deg2rad));
-        direction.y = -vel * (float) (Math.cos(rotation*deg2rad));
+        //direction.x = -vel * (float) (Math.sin(rotation*deg2rad));
+        //direction.y = -vel * (float) (Math.cos(rotation*deg2rad));
 
         System.out.println("R: " + rotation);
 
         b2dPlayer.setTransform(b2dPlayer.getPosition(), rotation*deg2rad);
         b2dPlayer.setAngularVelocity(0);
         //System.out.println("body angle: " + b2dPlayer.getAngle()*180f/Math.PI);
-        //System.out.println("vel " + vX + " " + vY + " " + " deg " + deg);
+        System.out.println("vel " + vX + " " + vY + " " + " deg " + deg + " Vcam " + - Universe.getInstance(b2dWorld).vCam);
         b2dPlayer.setLinearVelocity(vX,vY);
         //b2dPlayer.applyLinearImpulse(direction,b2dPlayer.getPosition(),true);
     }
