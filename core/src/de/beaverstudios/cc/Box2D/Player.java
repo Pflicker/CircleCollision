@@ -49,7 +49,7 @@ public class Player {
 
         // set the shape (here we use a box 50 meters wide, 1 meter tall )
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(2,1);
+        shape.setAsBox(1f,0.5f);
 
         // set the properties of the object ( shape, weight, restitution(bouncyness)
         FixtureDef fixtureDef = new FixtureDef();
@@ -79,10 +79,7 @@ public class Player {
 
         rotation = (float) (90-deg);
 
-        //direction.x = -vel * (float) (Math.sin(rotation*deg2rad));
-        //direction.y = -vel * (float) (Math.cos(rotation*deg2rad));
-
-        System.out.println("R: " + rotation);
+        System.out.println("R: " + b2dPlayer.getPosition());
 
         b2dPlayer.setTransform(b2dPlayer.getPosition(), rotation*deg2rad);
         b2dPlayer.setAngularVelocity(0);

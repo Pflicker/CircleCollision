@@ -15,9 +15,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.utils.Array;
 
 import de.beaverstudios.cc.Box2D.B2dModel;
+import de.beaverstudios.cc.Box2D.ListenerClass;
 import de.beaverstudios.cc.ui.UI;
 
 public class GameScreen implements Screen {
@@ -38,6 +40,7 @@ public class GameScreen implements Screen {
     public OrthographicCamera cam;
     public B2dModel model;
     public Box2DDebugRenderer debugRenderer;
+    public ContactListener contactListener;
 
     public static float time;
     public static int score;
@@ -80,6 +83,9 @@ public class GameScreen implements Screen {
         model = new B2dModel();
         cam = new OrthographicCamera(32,24);
         debugRenderer = new Box2DDebugRenderer(true,true,true,true,true,true);
+
+        contactListener = new ListenerClass(model.b2dWorld);
+        model.b2dWorld.setContactListener(contactListener);
 
         //Create Wolrd
         universe = Universe.getInstance(model.b2dWorld);

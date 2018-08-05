@@ -1,7 +1,10 @@
 package de.beaverstudios.cc;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+
+import java.awt.event.KeyEvent;
 
 import de.beaverstudios.cc.ui.UI;
 
@@ -15,8 +18,22 @@ public class InputController implements InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
+
+        if (Gdx.input.isKeyJustPressed(keycode)) {
+            System.out.println(keycode);
+            if (keycode == Input.Keys.D) {
+                gameScreen.moveRight();
+                UI.moveRight.makeMove();
+                System.out.println("Right");
+            } else if (keycode == Input.Keys.A){
+                gameScreen.moveLeft();
+                UI.moveLeft.makeMove();
+                System.out.println("Left");
+            }
+        }
         return false;
     }
+
 
     @Override
     public boolean keyUp(int keycode) {
@@ -24,7 +41,7 @@ public class InputController implements InputProcessor {
     }
 
     @Override
-    public boolean keyTyped(char character) {
+    public boolean keyTyped(char character)  {
         return false;
     }
 

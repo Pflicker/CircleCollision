@@ -31,7 +31,7 @@ public class Universe {
         tLastAst    = 0.0f;
         dtAst       = 3.0f;
         asteroid    = Asteroid.getInstance(world);
-        v0          = 3.f;
+        v0          = 2.f;
         vCam        = 0.f;
         asteroids   = new Array<Body>();
     }
@@ -53,6 +53,7 @@ public class Universe {
             rndY = -10.0f + 20*(float) Math.random();
             rndRad = 1 + 3*(float) Math.random();
             asteroids.add(asteroid.makeAsteroid(15, rndY, rndRad,3, DynamicBody,false));
+            advanceDtAst();
         }
     }
 
@@ -70,11 +71,7 @@ public class Universe {
         vel.x += vCam;
         player.b2dPlayer.setLinearVelocity(vel);
 
-        if (player.b2dPlayer.getPosition().x <= 0.f) {
-            vCam = 0.0f;
-        } else {
-            vCam = (float) (0.3 * player.b2dPlayer.getPosition().x);
-        }
+        vCam = (float) (v0 * 1f/32f * (player.b2dPlayer.getPosition().x + 16f));
 
         for(int i=0; i<asteroids.size; i++){
             vel = asteroids.get(i).getLinearVelocity();
@@ -88,5 +85,10 @@ public class Universe {
         //System.out.println("vel2 " + player.b2dPlayer.getLinearVelocity());
 
     return;
+    }
+
+    public void advanceDtAst(){
+        dtAst *= 0.99;
+        return;
     }
 }
