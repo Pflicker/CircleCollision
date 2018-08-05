@@ -87,6 +87,17 @@ public class Universe {
     return;
     }
 
+    public void deleteDeadAsteroids(){
+        for(int i=0; i<asteroids.size; i++){
+
+            if (asteroids.get(i).getPosition().x < -20f){
+                world.destroyBody(asteroids.get(i));
+                asteroids.removeIndex(i);
+            }
+        }
+        return;
+    }
+
     public void advanceDtAst(){
         dtAst *= 0.99;
         return;

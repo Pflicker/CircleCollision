@@ -153,6 +153,7 @@ public class GameScreen implements Screen {
             score += dt;
             universe.updateVCam();
             universe.CreateAsteroid();
+            universe.deleteDeadAsteroids();
             model.logicStep(dt);
         }
         ui.act();
