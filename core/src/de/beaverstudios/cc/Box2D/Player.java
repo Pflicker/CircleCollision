@@ -20,9 +20,9 @@ public class Player {
 
     public Player(World b2dWorld) {
         this.b2dWorld = b2dWorld;
-        this.vel = 3.f;
         rotation = 0;
         this.universe = Universe.getInstance(b2dWorld);
+        this.vel = universe.v0;
 
         //Create b2d object
         createPlayer();
