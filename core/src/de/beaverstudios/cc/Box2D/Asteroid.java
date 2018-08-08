@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 import com.badlogic.gdx.physics.box2d.Shape;
@@ -18,6 +19,8 @@ public class Asteroid {
     public static final int RUBBER = 2;
     public static final int STONE = 3;
 
+
+    private static Universe universe;
     private World world;
     private static Asteroid instance;
     private Asteroid(World world){
@@ -27,6 +30,7 @@ public class Asteroid {
     public static Asteroid getInstance(World world){
         if(Asteroid.instance == null){
             Asteroid.instance = new Asteroid(world);
+            universe = Universe.getInstance(world);
         }
         return Asteroid.instance;
     }
@@ -39,9 +43,9 @@ public class Asteroid {
         float rnd;
 
         rnd = (float) Math.random();
-        vX = (float) -Math.sin(rnd*Math.PI);
-        vY = (float)  Math.cos(rnd*Math.PI);
-        vX -= Universe.getInstance(world).vCam;
+        vX = (float) -Math.sin(rnd*Math.PI)*universe.v0*0.5f;
+        vY = (float)  Math.cos(rnd*Math.PI)*universe.v0*0.5f;
+        vX -= universe.vCam;
 
         BodyDef boxBodyDef = new BodyDef();
         boxBodyDef.type = bodyType;
