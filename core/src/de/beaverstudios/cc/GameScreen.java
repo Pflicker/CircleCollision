@@ -43,7 +43,7 @@ public class GameScreen implements Screen {
     public ContactListener contactListener;
 
     public static float time;
-    public static int score;
+    public static float score;
 
     public static boolean play = true;
 
@@ -53,12 +53,17 @@ public class GameScreen implements Screen {
     public PolygonSprite poly;
     public Texture background;
 
+    public static int vpW;
+    public static int vpH;
 
     public static Universe universe;
 
     public GameScreen(CC cc) {
         this.game = cc;
         this.batch = cc.gameBatch;
+
+        vpH = 24;
+        vpW = 32;
 
         polyBatch = new PolygonSpriteBatch();
 
@@ -113,9 +118,6 @@ public class GameScreen implements Screen {
         poly = new PolygonSprite(region);
         poly.setOrigin(10,20);
 
-
-
-
     }
 
     @Override
@@ -154,6 +156,9 @@ public class GameScreen implements Screen {
             universe.updateVCam();
             universe.CreateAsteroid();
             universe.deleteDeadAsteroids();
+            universe.periodicBoundaries();
+            advanceDifficulty(dt);
+            updateScore(dt);
             model.logicStep(dt);
         }
         ui.act();
@@ -242,5 +247,21 @@ public class GameScreen implements Screen {
         } while(Math.abs(rnd-dirRight.peek()) < 30);
 
         dirRight.add(rnd);
+    }
+
+    public void updateScore(float dt){
+        score += universe.vCam*dt;
+        return;
+    }
+
+    public void advanceDifficulty(float dt){
+        universe.dtAst = 1f + universe.dtAstInit*sigmoid(-time, universe.gameTimeNorm, 5);
+        universe.v0    = universe.v0Init*sigmoid(time, universe.gameTimeNorm, -5);
+        //System.out.println("v0 " + universe.v0 + "   dt " + universe.dtAst);
+        return;
+    }
+
+    public float sigmoid(double x, double norm, double x0){
+        return (float) (0.5*(1.0+Math.tanh(0.5*(x+x0)/norm)));
     }
 }

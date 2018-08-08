@@ -12,7 +12,6 @@ import de.beaverstudios.cc.Universe;
 public class Player {
 
     private static Player instance;
-    public float vel;
     public float rotation;
     World b2dWorld;
     public Body b2dPlayer;
@@ -22,8 +21,6 @@ public class Player {
         this.b2dWorld = b2dWorld;
         rotation = 0;
         this.universe = Universe.getInstance(b2dWorld);
-        this.vel = universe.v0;
-
         //Create b2d object
         createPlayer();
     }
@@ -74,15 +71,15 @@ public class Player {
 
         //b2dDeg  = (float) (deg)
 
-        vX = (float) (vel*Math.sin(deg*deg2rad)) - universe.vCam;
-        vY = (float) (vel*Math.cos(deg*deg2rad));
+        vX = (float) (universe.v0*Math.sin(deg*deg2rad)) - universe.vCam;
+        vY = (float) (universe.v0*Math.cos(deg*deg2rad));
 
         rotation = (float) (90-deg);
 
         System.out.println("R: " + b2dPlayer.getPosition());
 
         b2dPlayer.setTransform(b2dPlayer.getPosition(), rotation*deg2rad);
-        b2dPlayer.setAngularVelocity(0);
+        //b2dPlayer.setAngularVelocity(0);
         //System.out.println("body angle: " + b2dPlayer.getAngle()*180f/Math.PI);
         System.out.println("vel " + vX + " " + vY + " " + " deg " + deg + " Vcam " + - Universe.getInstance(b2dWorld).vCam);
         b2dPlayer.setLinearVelocity(vX,vY);

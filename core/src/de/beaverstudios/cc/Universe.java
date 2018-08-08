@@ -17,10 +17,13 @@ public class Universe {
     public static Player player;
     public World world;
 
-    public float tLastAst;
-    public float dtAst;
-    public float v0;
-    public float vCam;
+    public static float tLastAst;
+    public static float dtAst;
+    public static float dtAstInit;
+    public static float v0;
+    public static float v0Init;
+    public static float vCam;
+    public static float gameTimeNorm;
     public Asteroid asteroid;
 
     public static Array<Body> asteroids;
@@ -30,9 +33,12 @@ public class Universe {
         this.world  = world;
         tLastAst    = 0.0f;
         dtAst       = 3.0f;
+        dtAstInit   = 3.0f;
         asteroid    = Asteroid.getInstance(world);
-        v0          = 2.f;
+        v0Init      = 4.0f;
+        v0          = 4.0f;
         vCam        = 0.f;
+        gameTimeNorm= 100f;
         asteroids   = new Array<Body>();
     }
 
@@ -52,13 +58,13 @@ public class Universe {
             tLastAst = GameScreen.time;
             rndY = -10.0f + 20*(float) Math.random();
             rndRad = 1 + 3*(float) Math.random();
-            asteroids.add(asteroid.makeAsteroid(15, rndY, rndRad,3, DynamicBody,false));
-            advanceDtAst();
+            asteroids.add(asteroid.makeAsteroid(0.6f*GameScreen.vpW, rndY, rndRad,3, DynamicBody,false));
         }
     }
 
     public void updateVCam() {
 
+        //System.out.println("Vcam0 " + vCam + " x " + player.b2dPlayer.getPosition().x + " v0 " + v0);
         Vector2 vel;
         //System.out.println("vel1 " + player.b2dPlayer.getLinearVelocity());
         for(int i=0; i<asteroids.size; i++){
@@ -71,7 +77,7 @@ public class Universe {
         vel.x += vCam;
         player.b2dPlayer.setLinearVelocity(vel);
 
-        vCam = (float) (v0 * 1f/32f * (player.b2dPlayer.getPosition().x + 16f));
+        vCam = (v0 * 1f/32f * (player.b2dPlayer.getPosition().x + 16f));
 
         for(int i=0; i<asteroids.size; i++){
             vel = asteroids.get(i).getLinearVelocity();
@@ -82,7 +88,7 @@ public class Universe {
         vel = player.b2dPlayer.getLinearVelocity();
         vel.x -= vCam;
         player.b2dPlayer.setLinearVelocity(vel);
-        //System.out.println("vel2 " + player.b2dPlayer.getLinearVelocity());
+        //System.out.println("Vcam1 " + vCam + " x " + player.b2dPlayer.getPosition().x + " v0 " + v0);
 
     return;
     }
@@ -98,8 +104,37 @@ public class Universe {
         return;
     }
 
-    public void advanceDtAst(){
-        dtAst *= 0.99;
+    public void periodicBoundaries(){
+
+        Vector2 pos;
+        for(int i=0; i<asteroids.size; i++) {
+            if (asteroids.get(i).getPosition().y > GameScreen.vpH / 2.f) {
+                if (asteroids.get(i).getLinearVelocity().y > 0.0){
+                    pos = asteroids.get(i).getPosition().sub( new Vector2(0.0f, GameScreen.vpH));
+                    asteroids.get(i).setTransform(pos, asteroids.get(i).getAngle());
+                }
+            }
+        }
+        for(int i=0; i<asteroids.size; i++) {
+            if (asteroids.get(i).getPosition().y < -GameScreen.vpH / 2.f) {
+                if (asteroids.get(i).getLinearVelocity().y < 0.0){
+                    pos = asteroids.get(i).getPosition().add( new Vector2(0.0f, GameScreen.vpH));
+                    asteroids.get(i).setTransform(pos, asteroids.get(i).getAngle());
+                }
+            }
+        }
+        if (player.b2dPlayer.getPosition().y > GameScreen.vpH / 2.f) {
+            if (player.b2dPlayer.getLinearVelocity().y > 0.0){
+                pos = player.b2dPlayer.getPosition().sub( new Vector2(0.0f, GameScreen.vpH));
+                player.b2dPlayer.setTransform(pos, player.b2dPlayer.getAngle());
+            }
+        }
+        if (player.b2dPlayer.getPosition().y < -GameScreen.vpH / 2.f) {
+            if (player.b2dPlayer.getLinearVelocity().y < 0.0){
+                pos = player.b2dPlayer.getPosition().add( new Vector2(0.0f, GameScreen.vpH));
+                player.b2dPlayer.setTransform(pos, player.b2dPlayer.getAngle());
+            }
+        }
         return;
     }
 }
