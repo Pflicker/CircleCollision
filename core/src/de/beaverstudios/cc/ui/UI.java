@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.beaverstudios.cc.CC;
-import de.beaverstudios.cc.GameScreen;
+import de.beaverstudios.cc.Screens.GameScreen;
 
 public class UI extends Stage {
 
@@ -34,6 +34,8 @@ public class UI extends Stage {
     private TextButton play;
 
     public UI(Game game, SpriteBatch batch) {
+
+        //TODO überarbeiten
         super(new FitViewport(CC.WIDTH, CC.HEIGHT, new OrthographicCamera()), batch);
 
         skin = new Skin(Gdx.files.internal("skins/uiskin.json"));
@@ -80,7 +82,8 @@ public class UI extends Stage {
     @Override
     public void act(float delta) {
         super.act(delta);
-        score.setText("Score: " + GameScreen.score);
+        score.setText("Score: " + (int) GameScreen.score);
         time.setText("Time: " + (int) GameScreen.time);
     }
+
 }

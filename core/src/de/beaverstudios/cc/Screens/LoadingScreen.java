@@ -1,6 +1,9 @@
-package de.beaverstudios.cc;
+package de.beaverstudios.cc.Screens;
 
 import com.badlogic.gdx.Screen;
+
+import de.beaverstudios.cc.CC;
+import de.beaverstudios.cc.Screens.GameScreen;
 
 class LoadingScreen implements Screen {
     public LoadingScreen(CC cc) {

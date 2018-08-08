@@ -1,4 +1,4 @@
-package de.beaverstudios.cc;
+package de.beaverstudios.cc.Screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -20,6 +20,9 @@ import com.badlogic.gdx.utils.Array;
 
 import de.beaverstudios.cc.Box2D.B2dModel;
 import de.beaverstudios.cc.Box2D.ListenerClass;
+import de.beaverstudios.cc.CC;
+import de.beaverstudios.cc.InputController;
+import de.beaverstudios.cc.Universe;
 import de.beaverstudios.cc.ui.UI;
 
 public class GameScreen implements Screen {
@@ -52,11 +55,22 @@ public class GameScreen implements Screen {
     public Texture asteroid;
     public PolygonSprite poly;
     public Texture background;
+    public Sprite farStars;
+    public Sprite planet1;
 
 
     public static Universe universe;
 
     public GameScreen(CC cc) {
+        //TODO Ads einfügen
+        //TODO Safe Score on Device
+        //TODO Particle Effect Player
+        //TODO Spieler Leben einfügen
+        //TODO Objekte / Bonuspunkte Extr Leben (Schild ? wie +1 Leben)
+        //TODO Polygons für Asteroiden
+        //TODO Polygons übermalen / Bilder für die Polygons malen
+        //TODO UI verbessern
+
         this.game = cc;
         this.batch = cc.gameBatch;
 
@@ -93,7 +107,12 @@ public class GameScreen implements Screen {
         score = 0;
         time = 0;
 
-        background = new Texture(Gdx.files.internal("background.jpg"));
+        background = new Texture(Gdx.files.internal("Hintergrund.png")); //TODO Größe ändern
+        farStars = new Sprite(new Texture(Gdx.files.internal("farstars.png"))); // TODO Größe ändern
+        planet1 = new Sprite(new Texture(Gdx.files.internal("planet1.png"))); //TODO Größe ändern
+        planet1.setY(400);
+        planet1.setX(1400);
+        planet1.setScale(0.3f);
 
         player = new Texture(Gdx.files.internal("player2.png"));
         spPlayer = new Sprite(player);
@@ -113,9 +132,6 @@ public class GameScreen implements Screen {
         poly = new PolygonSprite(region);
         poly.setOrigin(10,20);
 
-
-
-
     }
 
     @Override
@@ -134,6 +150,9 @@ public class GameScreen implements Screen {
 
         batch.begin();
         batch.draw(background,0,0);
+        batch.draw(farStars,farStars.getX(),farStars.getY()); //TODO an Geschwindigkeit von Cam anpassen
+        batch.draw(planet1,planet1.getX(),planet1.getY(),32,32); //TODO an Geschwindigkeit von Cam anpassen
+
         batch.draw(player,playerPos.x,playerPos.y,50,50,100,100,1,1,universe.player.rotation,1,1,player.getWidth(),player.getHeight(),false,false);
         debugRenderer.render(model.b2dWorld, cam.combined);
         batch.end();
@@ -155,6 +174,11 @@ public class GameScreen implements Screen {
             universe.CreateAsteroid();
             universe.deleteDeadAsteroids();
             model.logicStep(dt);
+
+            float currentX = farStars.getX();
+            farStars.setX(currentX - dt*20);
+            currentX = planet1.getX();
+            planet1.setX(currentX - dt*40);
         }
         ui.act();
 
@@ -167,8 +191,7 @@ public class GameScreen implements Screen {
 
     public Vector2 worldToScreen(float x, float y){
         Vector2 screenCoord = new Vector2();
-
-//        1280 * 720
+        //        1280 * 720
         int meterToPixel = 50; //50 pixels to a meter
         int offsetX = 640; //x offset in Pixels centerX
         int offsetY = 360; //y offset in Pixels centerY

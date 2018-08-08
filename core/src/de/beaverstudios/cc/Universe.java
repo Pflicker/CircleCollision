@@ -6,9 +6,9 @@ import com.badlogic.gdx.utils.Array;
 
 import de.beaverstudios.cc.Box2D.Asteroid;
 import de.beaverstudios.cc.Box2D.Player;
+import de.beaverstudios.cc.Screens.GameScreen;
 
 import static com.badlogic.gdx.physics.box2d.BodyDef.BodyType.DynamicBody;
-import static de.beaverstudios.cc.GameScreen.universe;
 
 public class Universe {
 

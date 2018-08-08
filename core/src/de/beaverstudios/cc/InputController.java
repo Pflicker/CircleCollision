@@ -4,8 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 
-import java.awt.event.KeyEvent;
-
+import de.beaverstudios.cc.Screens.GameScreen;
 import de.beaverstudios.cc.ui.UI;
 
 public class InputController implements InputProcessor {
