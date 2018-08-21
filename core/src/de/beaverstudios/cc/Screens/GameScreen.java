@@ -160,10 +160,10 @@ public class GameScreen implements Screen {
         batch.end();
 
         polyBatch.begin();
-        Box2DPolygonSprite.draw(polyBatch, universe.world);
-        //    for(Body aps : Universe.asteroids){
-        //        aps.draw(polyBatch);
-        //}
+        //Box2DPolygonSprite.draw(polyBatch, universe.world);
+        for(Body aps : Universe.asteroids){
+            ((Box2DPolygonSprite) aps.getUserData()).draw(polyBatch, aps);
+        }
         polyBatch.end();
 
         ui.draw();

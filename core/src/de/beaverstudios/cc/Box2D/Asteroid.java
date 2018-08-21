@@ -55,6 +55,7 @@ public class Asteroid {
         float vX;
         float vY;
         float rnd;
+        Fixture fixture;
 
         rnd = (float) Math.random();
         vX = (float) -Math.sin(rnd*Math.PI)*universe.v0*0.5f;
@@ -71,11 +72,18 @@ public class Asteroid {
         Body boxBody = world.createBody(boxBodyDef);
         //CircleShape circleShape = new CircleShape();
         //circleShape.setRadius(radius /2);
+
+
         boxBody.createFixture(makeFixture(material,MakePoly()));
+        fixture = boxBody.getFixtureList().get(0);
         boxBody.setLinearVelocity(vX,vY);
-        Box2DPolygonSprite box2DSprite = new Box2DPolygonSprite(createPolygonSprite(boxBody.getFixtureList().get(0), boxBody));
+        Box2DPolygonSprite box2DSprite = new Box2DPolygonSprite(createPolygonSprite(fixture, boxBody));
 
         boxBody.setUserData(box2DSprite); // will draw on whole body
+        boxBody.getFixtureList().get(0).setUserData(box2DSprite);
+
+        box2DSprite.setUseOrigin(true);
+        box2DSprite.
         //boxBody.setAngularVelocity((float)(1.0 + Math.random()));
 
         //circleShape.dispose();
