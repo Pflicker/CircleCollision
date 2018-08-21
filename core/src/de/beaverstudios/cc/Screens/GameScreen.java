@@ -19,14 +19,20 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 
 import de.beaverstudios.cc.Box2D.B2dModel;
 import de.beaverstudios.cc.Box2D.ListenerClass;
 import de.beaverstudios.cc.CC;
 import de.beaverstudios.cc.InputController;
+import de.beaverstudios.cc.Screens.Objects.AsteroidPolySprite;
 import de.beaverstudios.cc.Universe;
+import de.beaverstudios.cc.Utils;
 import de.beaverstudios.cc.ui.UI;
+
+import static de.beaverstudios.cc.Utils.sigmoid;
+import static de.beaverstudios.cc.Utils.worldToScreen;
 
 public class GameScreen implements Screen {
 
@@ -43,23 +49,21 @@ public class GameScreen implements Screen {
     public static Array<Integer> dirLeft;
     public static Array<Integer> dirRight;
 
+    public Vector2 playerPos;
+
     public OrthographicCamera cam;
     public B2dModel model;
     public Box2DDebugRenderer debugRenderer;
     public ContactListener contactListener;
-
-    public TextureAtlas particleAtlas;
-    public ParticleEffect fire;
 
     public static float time;
     public static float score;
 
     public static boolean play = true;
 
+    public static Array<AsteroidPolySprite> asteroidSprites;
     public Texture player;
     public Sprite spPlayer;
-    public Texture asteroid;
-    public PolygonSprite poly;
     public Texture background;
     public Sprite farStars;
     public Sprite planet1;
@@ -85,6 +89,7 @@ public class GameScreen implements Screen {
         vpH = 24;
         vpW = 32;
 
+        asteroidSprites = new Array<AsteroidPolySprite>();
         polyBatch = new PolygonSpriteBatch();
 
         dirLeft = new Array<Integer>(3);
@@ -128,22 +133,7 @@ public class GameScreen implements Screen {
         player = new Texture(Gdx.files.internal("player2.png"));
         spPlayer = new Sprite(player);
         spPlayer.scale(0.01f);
-
-        asteroid = new Texture(Gdx.files.internal("asteroiden.png"));
-        PolygonRegion region = new PolygonRegion(new TextureRegion(asteroid),
-                new float[]{
-                        0, 10,
-                        85, 9,
-                        85, 120,
-                        0, 120
-                }, new short[]{
-                0, 1, 2,
-                0, 2, 3
-        });
-        poly = new PolygonSprite(region);
-        poly.setOrigin(10,20);
-
-    }
+        }
 
     @Override
     public void show() {
@@ -152,12 +142,12 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float dt) {
+        playerPos = new Vector2(worldToScreen(universe.player.b2dPlayer.getPosition().x,universe.player.b2dPlayer.getPosition().y));
         update(dt);
 
         Gdx.gl.glClearColor(1, 1, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        Vector2 playerPos = worldToScreen(universe.player.b2dPlayer.getPosition().x,universe.player.b2dPlayer.getPosition().y);
 
         batch.begin();
         batch.draw(background,0,0);
@@ -165,21 +155,19 @@ public class GameScreen implements Screen {
         batch.draw(planet1,planet1.getX(),planet1.getY(),32,32); //TODO an Geschwindigkeit von Cam anpassen
 
         batch.draw(player,playerPos.x,playerPos.y,50,50,100,100,1,1,universe.player.rotation,1,1,player.getWidth(),player.getHeight(),false,false);
-        debugRenderer.render(model.b2dWorld, cam.combined);
+        //debugRenderer.render(model.b2dWorld, cam.combined);
         batch.end();
 
         polyBatch.begin();
-        //poly.draw(polyBatch);
+            for(AsteroidPolySprite aps : asteroidSprites){
+                aps.sprite.draw(polyBatch);
+            }
         polyBatch.end();
 
-
-
         ui.draw();
-
     }
 
     public void update(float dt){
-
         if(play) {
             time += dt;
             score += dt;
@@ -195,28 +183,17 @@ public class GameScreen implements Screen {
             farStars.setX(currentX - dt*20);
             currentX = planet1.getX();
             planet1.setX(currentX - dt*40);
+
+            for(AsteroidPolySprite asd : asteroidSprites){
+                asd.update();
+            }
         }
         ui.act();
-
     }
 
     @Override
     public void resize(int width, int height) {
 
-    }
-
-    public Vector2 worldToScreen(float x, float y){
-        Vector2 screenCoord = new Vector2();
-        //        1280 * 720
-        int meterToPixel = 50; //50 pixels to a meter
-        int offsetX = 640; //x offset in Pixels centerX
-        int offsetY = 360; //y offset in Pixels centerY
-        int screenX = (int)(x*meterToPixel + offsetX);
-        int screenY = (int)(y*meterToPixel + offsetY) ;
-
-        screenCoord.x = screenX;
-        screenCoord.y = screenY;
-        return screenCoord;
     }
 
     @Override
@@ -289,13 +266,9 @@ public class GameScreen implements Screen {
     }
 
     public void advanceDifficulty(float dt){
-        universe.dtAst = 1f + universe.dtAstInit*sigmoid(-time, universe.gameTimeNorm, 5);
+        universe.dtAst = 1f + universe.dtAstInit* sigmoid(-time, universe.gameTimeNorm, 5);
         universe.v0    = universe.v0Init*sigmoid(time, universe.gameTimeNorm, -5);
         //System.out.println("v0 " + universe.v0 + "   dt " + universe.dtAst);
         return;
-    }
-
-    public float sigmoid(double x, double norm, double x0){
-        return (float) (0.5*(1.0+Math.tanh(0.5*(x+x0)/norm)));
     }
 }
