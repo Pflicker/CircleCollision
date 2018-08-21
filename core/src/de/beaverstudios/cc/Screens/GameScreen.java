@@ -7,11 +7,14 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.g2d.PolygonSprite;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -44,6 +47,9 @@ public class GameScreen implements Screen {
     public B2dModel model;
     public Box2DDebugRenderer debugRenderer;
     public ContactListener contactListener;
+
+    public TextureAtlas particleAtlas;
+    public ParticleEffect fire;
 
     public static float time;
     public static float score;
@@ -165,6 +171,8 @@ public class GameScreen implements Screen {
         polyBatch.begin();
         //poly.draw(polyBatch);
         polyBatch.end();
+
+
 
         ui.draw();
 
