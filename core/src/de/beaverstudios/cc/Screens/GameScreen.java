@@ -55,7 +55,7 @@ public class GameScreen implements Screen {
     public Texture asteroid;
     public PolygonSprite poly;
     public Texture background;
-    public Sprite farStars;
+    public Sprite farStars1,farStars2;
     public Sprite planet1;
 
     public static int vpW;
@@ -112,9 +112,11 @@ public class GameScreen implements Screen {
         score = 0;
         time = 0;
 
-        background = new Texture(Gdx.files.internal("Hintergrund.png")); //TODO Größe ändern
-        farStars = new Sprite(new Texture(Gdx.files.internal("farstars.png"))); // TODO Größe ändern
-        planet1 = new Sprite(new Texture(Gdx.files.internal("planet1.png"))); //TODO Größe ändern
+        background = new Texture(Gdx.files.internal("Hintergrund.png"));
+        farStars1 = new Sprite(new Texture(Gdx.files.internal("farstars.png")));
+        farStars2 = new Sprite(new Texture(Gdx.files.internal("farstars.png")));
+        farStars2.setX(farStars2.getWidth());
+        planet1 = new Sprite(new Texture(Gdx.files.internal("planet1.png")));
         planet1.setY(400);
         planet1.setX(1400);
         planet1.setScale(0.3f);
@@ -155,7 +157,8 @@ public class GameScreen implements Screen {
 
         batch.begin();
         batch.draw(background,0,0);
-        batch.draw(farStars,farStars.getX(),farStars.getY()); //TODO an Geschwindigkeit von Cam anpassen
+        batch.draw(farStars1,farStars1.getX(),farStars1.getY()); //TODO an Geschwindigkeit von Cam anpassen
+        batch.draw(farStars2,farStars2.getX(),farStars2.getY());
         batch.draw(planet1,planet1.getX(),planet1.getY(),32,32); //TODO an Geschwindigkeit von Cam anpassen
 
         batch.draw(player,playerPos.x,playerPos.y,50,50,100,100,1,1,universe.player.rotation,1,1,player.getWidth(),player.getHeight(),false,false);
@@ -183,10 +186,19 @@ public class GameScreen implements Screen {
             updateScore(dt);
             model.logicStep(dt);
 
-            float currentX = farStars.getX();
-            farStars.setX(currentX - dt*20);
+            float currentX = farStars1.getX();
+            farStars1.setX(currentX - dt*(Universe.vCam*60+60f));
+            currentX = farStars2.getX();
+            farStars2.setX(currentX - dt*(Universe.vCam*60+60f));
+
+            if (farStars1.getX()<=-farStars1.getWidth()){
+                farStars1.setX(farStars1.getWidth());
+            }
+            if (farStars2.getX()<=-farStars2.getWidth()){
+                farStars2.setX(farStars2.getWidth());
+            }
             currentX = planet1.getX();
-            planet1.setX(currentX - dt*40);
+            planet1.setX(currentX - dt*(Universe.vCam*120+120f));
         }
         ui.act();
 
@@ -287,7 +299,7 @@ public class GameScreen implements Screen {
         return;
     }
 
-    public float sigmoid(double x, double norm, double x0){
+    public static float sigmoid(double x, double norm, double x0){
         return (float) (0.5*(1.0+Math.tanh(0.5*(x+x0)/norm)));
     }
 }

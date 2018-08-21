@@ -71,7 +71,7 @@ public class Player {
 
         //b2dDeg  = (float) (deg)
 
-        vX = (float) (universe.v0*Math.sin(deg*deg2rad)) - universe.vCam;
+        vX = (float) (universe.v0*Math.sin(deg*deg2rad));// - universe.vCam;
         vY = (float) (universe.v0*Math.cos(deg*deg2rad));
 
         rotation = (float) (90-deg);

@@ -67,7 +67,7 @@ public class Universe {
         //System.out.println("Vcam0 " + vCam + " x " + player.b2dPlayer.getPosition().x + " v0 " + v0);
         Vector2 vel;
         //System.out.println("vel1 " + player.b2dPlayer.getLinearVelocity());
-        for(int i=0; i<asteroids.size; i++){
+        for (int i = 0; i < asteroids.size; i++) {
             vel = asteroids.get(i).getLinearVelocity();
             vel.x += vCam;
             asteroids.get(i).setLinearVelocity(vel);
@@ -78,6 +78,12 @@ public class Universe {
         player.b2dPlayer.setLinearVelocity(vel);
 
         vCam = (v0 * 1f/32f * (player.b2dPlayer.getPosition().x + 16f));
+        //if (player.b2dPlayer.getPosition().x > GameScreen.vpW / 4f) {
+        //    vCam = 2f*GameScreen.sigmoid(player.b2dPlayer.getPosition().x - (GameScreen.vpW / 4f),0.1f,1f );
+        //}
+        //else{
+        //    vCam = 0.0f;
+        //}
 
         for(int i=0; i<asteroids.size; i++){
             vel = asteroids.get(i).getLinearVelocity();
