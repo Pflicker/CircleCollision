@@ -109,6 +109,7 @@ public class Universe {
             if (asteroids.get(i).getPosition().x < -20f){
                 world.destroyBody(asteroids.get(i));
                 asteroids.removeIndex(i);
+                asteroidSprites.removeIndex(i);
             }
         }
         return;
