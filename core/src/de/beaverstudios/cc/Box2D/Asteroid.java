@@ -1,5 +1,6 @@
 package de.beaverstudios.cc.Box2D;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -18,6 +19,7 @@ public class Asteroid {
     public static final int WOOD = 1;
     public static final int RUBBER = 2;
     public static final int STONE = 3;
+
 
 
     private static Universe universe;
@@ -55,13 +57,32 @@ public class Asteroid {
 
         //create the body to attach said definition
         Body boxBody = world.createBody(boxBodyDef);
-        CircleShape circleShape = new CircleShape();
-        circleShape.setRadius(radius /2);
-        boxBody.createFixture(makeFixture(material,circleShape));
+        //CircleShape circleShape = new CircleShape();
+        //circleShape.setRadius(radius /2);
+        boxBody.createFixture(makeFixture(material,MakePoly()));
         boxBody.setLinearVelocity(vX,vY);
-        circleShape.dispose();
+        boxBody.setAngularVelocity((float)(1.0 + Math.random()));
+
+        //circleShape.dispose();
         System.out.println("Vast: " + vX +  " "+ vY);
         return boxBody;
+    }
+
+    static private Shape MakePoly(){
+
+        int Npoly = 8;
+        Vector2[] vertices = new Vector2[8];
+        float rnd1 = (float) (5*Math.random());
+
+
+        for (int i = 0; i < Npoly; i++) {
+            float rnd2 = (float) Math.random()+1.0f;
+            vertices[i] = new Vector2((float) (rnd1*rnd2*Math.sin(i/8.)) , (float) (rnd1*rnd2*Math.cos(i/8.)));
+        }
+        PolygonShape shape = new PolygonShape();
+        shape.set(vertices);
+
+        return shape;
     }
 
     static public FixtureDef makeFixture(int material, Shape shape){
