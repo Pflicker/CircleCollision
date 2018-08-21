@@ -17,16 +17,19 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 
+import net.dermetfan.gdx.graphics.g2d.Box2DPolygonSprite;
+import net.dermetfan.gdx.graphics.g2d.Box2DSprite;
+
 import de.beaverstudios.cc.Box2D.B2dModel;
 import de.beaverstudios.cc.Box2D.ListenerClass;
 import de.beaverstudios.cc.CC;
 import de.beaverstudios.cc.InputController;
-import de.beaverstudios.cc.Screens.Objects.AsteroidPolySprite;
 import de.beaverstudios.cc.Universe;
 import de.beaverstudios.cc.Utils;
 import de.beaverstudios.cc.ui.UI;
@@ -61,7 +64,6 @@ public class GameScreen implements Screen {
 
     public static boolean play = true;
 
-    public static Array<AsteroidPolySprite> asteroidSprites;
     public Texture player;
     public Sprite spPlayer;
     public Texture background;
@@ -89,7 +91,6 @@ public class GameScreen implements Screen {
         vpH = 24;
         vpW = 32;
 
-        asteroidSprites = new Array<AsteroidPolySprite>();
         polyBatch = new PolygonSpriteBatch();
 
         dirLeft = new Array<Integer>(3);
@@ -159,9 +160,10 @@ public class GameScreen implements Screen {
         batch.end();
 
         polyBatch.begin();
-            for(AsteroidPolySprite aps : asteroidSprites){
-                aps.sprite.draw(polyBatch);
-            }
+        Box2DPolygonSprite.draw(polyBatch, universe.world);
+        //    for(Body aps : Universe.asteroids){
+        //        aps.draw(polyBatch);
+        //}
         polyBatch.end();
 
         ui.draw();
@@ -184,9 +186,6 @@ public class GameScreen implements Screen {
             currentX = planet1.getX();
             planet1.setX(currentX - dt*40);
 
-            for(AsteroidPolySprite asd : asteroidSprites){
-                asd.update();
-            }
         }
         ui.act();
     }

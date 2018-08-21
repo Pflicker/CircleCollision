@@ -7,10 +7,8 @@ import com.badlogic.gdx.utils.Array;
 import de.beaverstudios.cc.Box2D.Asteroid;
 import de.beaverstudios.cc.Box2D.Player;
 import de.beaverstudios.cc.Screens.GameScreen;
-import de.beaverstudios.cc.Screens.Objects.AsteroidPolySprite;
 
 import static com.badlogic.gdx.physics.box2d.BodyDef.BodyType.DynamicBody;
-import static de.beaverstudios.cc.Screens.GameScreen.asteroidSprites;
 
 public class Universe {
 
@@ -62,7 +60,6 @@ public class Universe {
             rndRad = 1 + 3*(float) Math.random();
             body = asteroid.makeAsteroid(0.6f*GameScreen.vpW, rndY, rndRad,3, DynamicBody,false);
             asteroids.add(body);
-            asteroidSprites.add(new AsteroidPolySprite(body.getFixtureList().get(0), body));
         }
     }
 
@@ -109,7 +106,6 @@ public class Universe {
             if (asteroids.get(i).getPosition().x < -20f){
                 world.destroyBody(asteroids.get(i));
                 asteroids.removeIndex(i);
-                asteroidSprites.removeIndex(i);
             }
         }
         return;

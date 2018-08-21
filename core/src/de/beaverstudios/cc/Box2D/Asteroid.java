@@ -1,15 +1,27 @@
 package de.beaverstudios.cc.Box2D;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.PolygonRegion;
+import com.badlogic.gdx.graphics.g2d.PolygonSprite;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.EarClippingTriangulator;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
+
+import net.dermetfan.gdx.graphics.g2d.Box2DPolygonSprite;
+import net.dermetfan.gdx.graphics.g2d.Box2DSprite;
 
 import de.beaverstudios.cc.Universe;
 
@@ -61,11 +73,37 @@ public class Asteroid {
         //circleShape.setRadius(radius /2);
         boxBody.createFixture(makeFixture(material,MakePoly()));
         boxBody.setLinearVelocity(vX,vY);
-        boxBody.setAngularVelocity((float)(1.0 + Math.random()));
+        Box2DPolygonSprite box2DSprite = new Box2DPolygonSprite(createPolygonSprite(boxBody.getFixtureList().get(0), boxBody));
+
+        boxBody.setUserData(box2DSprite); // will draw on whole body
+        //boxBody.setAngularVelocity((float)(1.0 + Math.random()));
 
         //circleShape.dispose();
         System.out.println("Vast: " + vX +  " "+ vY);
         return boxBody;
+    }
+
+    PolygonSprite createPolygonSprite(Fixture fixture, Body body){
+        Texture asteroid = new Texture(Gdx.files.internal("asteroiden.png"));
+        TextureRegion textureRegion = new TextureRegion(asteroid,0,0,asteroid.getWidth(),asteroid.getHeight());
+        PolygonShape shape = (PolygonShape) fixture.getShape();
+        int vertexCount = shape.getVertexCount();
+        float[] vertices = new float[vertexCount * 2];
+        for (int k = 0; k < vertexCount; k++) {
+            Vector2 mTmp = new Vector2();
+            shape.getVertex(k, mTmp);
+            mTmp.rotate(body.getAngle()* MathUtils.radiansToDegrees);
+            mTmp.add(body.getPosition());
+            vertices[k * 2] = mTmp.x * 60; //PPM
+            vertices[k * 2 + 1] = mTmp.y * 60; //PPM
+        }
+        short triangles[] = new EarClippingTriangulator()
+                .computeTriangles(vertices)
+                .toArray();
+        PolygonRegion region = new PolygonRegion(textureRegion, vertices, triangles);
+
+        PolygonSprite sprite = new PolygonSprite(region);
+        return sprite;
     }
 
     static private Shape MakePoly(){
